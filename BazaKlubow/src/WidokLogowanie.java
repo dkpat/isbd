@@ -30,7 +30,7 @@ public class WidokLogowanie extends JComponent {
 	
 	public WidokLogowanie(DbProcessor proc) {
 		processor=proc;
-addComponentListener(new ComponentListener() {
+		addComponentListener(new ComponentListener() {
 			
 			@Override
 			public void componentShown(ComponentEvent arg0) {

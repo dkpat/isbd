@@ -4,6 +4,7 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
@@ -30,8 +31,18 @@ public class WidokStart extends JPanel {
 		processor=proc;
 		setLayout(new BorderLayout());
 	
-		
+		/*
+		 * To tylko panel pomocniczy
+		 * na przycisk logowania, u góry po prawej
+		 */
 		JPanel con = new JPanel();
+		/*
+		 * To z kolei panel 
+		 * na menu z lewej strony
+		 */
+		JPanel bocznyL=new JPanel();
+		bocznyL.setLayout(new GridLayout(0,1));
+		
 		JButton mp=new JButton("Pracownik");
 	
 		mp.setUI(new MyButtonUI());
@@ -89,6 +100,19 @@ public class WidokStart extends JPanel {
 			
 		}
 		*/
+		
+		/*
+		 * przyciski dla bocznego panelu
+		 */
+		
+		JButton koncerty=new JButton("Koncerty");
+		JButton muzycy=new JButton("Zespo³y");
+		JButton archiwum=new JButton("Archiwum");
+		bocznyL.add(koncerty);
+		bocznyL.add(muzycy);
+		bocznyL.add(archiwum);
+		add(BorderLayout.WEST,bocznyL);
+		
 		manageColumns(ciaglyPionowy);
 		JScrollPane panelPrzewijany=new JScrollPane(ciaglyPionowy);
 		add(BorderLayout.CENTER,panelPrzewijany);
