@@ -1,0 +1,171 @@
+import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Array;
+import java.sql.*;
+import java.util.ArrayList;
+
+import javax.swing.JComponent;
+
+
+public class DbProcessor {
+	Connection con;
+	Statement st;
+	ResultSet rs;
+	String db;
+public static void main(String[] args)
+{
+	System.out.println("Próba po³¹czenia z baz¹ danych");
+	DbProcessor take1=new DbProcessor();
+	System.out.println("Ma³a zmiana");
+	
+}
+	public DbProcessor()
+	{
+	    try{
+            String path = new java.io.File("Projekt1.accdb").getAbsolutePath();
+        db ="JDBC:ODBC:Driver=Microsoft Access Driver (*.mdb, *.accdb); DBQ="+path;
+            doConnection();
+        } catch(NullPointerException ex){
+                ex.printStackTrace();
+            }
+	}
+	
+	public void doConnection(){
+        try{
+            Class.forName("sun.jdbc.odbc.JdbcOdbcDriver");
+            
+            con = DriverManager.getConnection(db);
+        }catch(SQLException | ClassNotFoundException ex){
+            System.out.println(ex.toString());
+
+        }
+        finally
+        {
+        	/*
+        	if(con!=null)
+        	try{
+        		con.close();
+        	}catch(SQLException e)
+        	{
+        		System.out.println(e.toString());
+        		e.printStackTrace();
+        	}
+        	*/
+        }
+
+    }
+	
+	public boolean chekingPassword(String log,String pass)
+	{
+		try {
+			st=con.createStatement();
+			rs=st.executeQuery("SELECT * FROM Pracownicy WHERE StrComp('"+log+"',LoginP,0) = 0 AND StrComp('"+pass+"',Has³oP,0)=0;");
+			return rs.next();
+				
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			con=null;
+			return false;
+		}
+		
+	}
+	
+	public ArrayList<KlubComponent> createKlubComponents()
+	{
+		ArrayList<KlubComponent> result= new ArrayList<KlubComponent>();
+		try {
+			st=con.createStatement();
+			rs=st.executeQuery("SELECT * FROM Kluby");
+			while(rs.next())
+			{
+				String nazwa=rs.getString("NazwaK");
+				String adres=rs.getString("AdresK");
+				String w³aœciciel=rs.getString("W³aœciciel");
+				int pojemnoœæ=rs.getInt("Pojemnoœæ");
+				byte[] zdjêcie=rs.getBytes("Zdjêcie");
+				System.out.println(zdjêcie.length);
+				try {
+					byte[] arr= GetImageBytesFromOLEField(zdjêcie);
+					System.out.println(arr.length);
+					result.add(new KlubComponent(nazwa, adres, w³aœciciel, pojemnoœæ, arr));
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+			}
+			return result;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			con=null;
+			return null;
+		}
+	}
+	
+	public void disconect()
+	{
+		try {
+			con.close();
+		} catch (SQLException e) {
+			System.out.println("B³¹d przy zrywaniu po³¹czenia z baz¹ danych");
+			e.printStackTrace();
+		}
+	}
+	
+	private byte[] GetImageBytesFromOLEField(byte[] oleFieldBytes) throws Exception
+    {
+        final String BITMAP_ID_BLOCK = "BM";
+        final String JPG_ID_BLOCK = "\u00FF\u00D8\u00FF";
+        //final String JPG_ID_BLOCK = "JFIF";
+        final String PNG_ID_BLOCK = "\u0089PNG\r\n\u001a\n";
+        final String GIF_ID_BLOCK = "GIF8";
+        final String TIFF_ID_BLOCK = "II*\u0000";
+ 
+        byte[] imageBytes;
+ 
+        // Get a UTF7 Encoded string version
+       // Encoding u8 = Encoding.UTF7;
+        String strTemp;
+		try {
+			strTemp = new String(oleFieldBytes,"ISO-8859-1");
+			
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+ 
+        // Get the first 300 characters from the string
+        String strVTemp = strTemp.substring(0,300);
+        // Search for the block
+        int iPos = -1;
+        if (strVTemp.indexOf(BITMAP_ID_BLOCK) != -1)
+            iPos = strVTemp.indexOf(BITMAP_ID_BLOCK);
+        else if (strVTemp.indexOf(JPG_ID_BLOCK) != -1)
+            iPos = strVTemp.indexOf(JPG_ID_BLOCK);
+        else if (strVTemp.indexOf(PNG_ID_BLOCK) != -1)
+            iPos = strVTemp.indexOf(PNG_ID_BLOCK);
+        else if (strVTemp.indexOf(GIF_ID_BLOCK) != -1)
+            iPos = strVTemp.indexOf(GIF_ID_BLOCK);
+        else if (strVTemp.indexOf(TIFF_ID_BLOCK) != -1)
+            iPos = strVTemp.indexOf(TIFF_ID_BLOCK);
+        else
+            throw new Exception("Unable to determine header size for the OLE Object");
+ 
+        // From the position above get the new image
+        if (iPos == -1)
+            throw new Exception("Unable to determine header size for the OLE Object");
+ 
+       
+        imageBytes = new byte[oleFieldBytes.length - iPos];
+    
+        
+        System.arraycopy(oleFieldBytes,iPos, imageBytes, 0, imageBytes.length);
+        
+        return imageBytes;
+    }
+	
+
+}
