@@ -1,5 +1,6 @@
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
+import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -13,6 +14,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -41,10 +43,17 @@ public class WidokStart extends JPanel {
 		 * na menu z lewej strony
 		 */
 		JPanel bocznyL=new JPanel();
-		bocznyL.setLayout(new GridLayout(0,1));
+		bocznyL.setLayout(new GridLayout(0,1,0,10));
+		/*
+		 * Kolejny pomocniczy panel
+		 * tylko poto by stworzyæ rozk³ad 
+		 * ci¹g³y
+		 */
+		JPanel pomocL=new JPanel();
+		pomocL.setLayout(new FlowLayout());
+		pomocL.setBorder(BorderFactory.createLineBorder(Color.RED));
 		
 		JButton mp=new JButton("Pracownik");
-	
 		mp.setUI(new MyButtonUI());
 		mp.addMouseListener(new MouseListener() {
 			
@@ -111,7 +120,8 @@ public class WidokStart extends JPanel {
 		bocznyL.add(koncerty);
 		bocznyL.add(muzycy);
 		bocznyL.add(archiwum);
-		add(BorderLayout.WEST,bocznyL);
+		pomocL.add(bocznyL);
+		add(BorderLayout.WEST,pomocL);
 		
 		manageColumns(ciaglyPionowy);
 		JScrollPane panelPrzewijany=new JScrollPane(ciaglyPionowy);
