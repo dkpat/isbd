@@ -1,8 +1,10 @@
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Array;
+import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import javax.swing.JComponent;
 
@@ -16,6 +18,7 @@ public static void main(String[] args)
 {
 	System.out.println("Próba po³¹czenia z baz¹ danych");
 	DbProcessor take1=new DbProcessor();
+	take1.createKoncertyList();
 	System.out.println("Ma³a zmiana");
 	
 }
@@ -102,6 +105,30 @@ public static void main(String[] args)
 			con=null;
 			return null;
 		}
+	}
+	
+	public ArrayList<Koncerty> createKoncertyList()
+	{
+		ArrayList<Koncerty> result=new ArrayList<Koncerty>();
+		try {
+			st=con.createStatement();
+			rs=st.executeQuery("SELECT * FROM KONCERTY");
+			while(rs.next())
+			{
+				int ID=rs.getInt("NrKoncertu");
+				Timestamp data=rs.getTimestamp("DataKoncertu");
+				int liczbaLudzi=rs.getInt("LiczbaLudzi");
+				BigDecimal cenaBiletu=rs.getBigDecimal("CenaBiletu");
+				int nrKlubu=rs.getInt("NrKlubu");
+				result.add(new Koncerty(ID, data, liczbaLudzi, cenaBiletu, nrKlubu));
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println(Arrays.toString(result.toArray()));
+		return result;
 	}
 	
 	public void disconect()
