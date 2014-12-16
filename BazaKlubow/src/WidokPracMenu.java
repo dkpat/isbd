@@ -95,20 +95,7 @@ public class WidokPracMenu extends JPanel {
 		
 		add(BorderLayout.CENTER, srodek);
 		
-		/*
-		JButton b1 = new JButton("Dzia³aj");
-		b1.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				CardLayout c = (CardLayout) WidokPracMenu.this.getParent()
-						.getLayout();
-				c.show(getParent(), "Widok1");
-
-			}
-		});
-		add(BorderLayout.SOUTH, b1);
-		*/
+	
 	}
 
 }
