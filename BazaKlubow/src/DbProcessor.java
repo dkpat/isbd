@@ -9,31 +9,35 @@ import java.util.Arrays;
 import javax.swing.JComponent;
 
 
-public class DbProcessor {
-	Connection con;
-	Statement st;
-	ResultSet rs;
-	String db;
-public static void main(String[] args)
-{
-	System.out.println("Próba po³¹czenia z baz¹ danych");
-	DbProcessor take1=new DbProcessor();
-	take1.createKoncertyList();
-	System.out.println("Ma³a zmiana");
+ public final class DbProcessor {
+	private static Connection con;
+	private static Statement st;
+	private static ResultSet rs;
+	private static String db;
 	
-}
-	public DbProcessor()
+	
+	private DbProcessor()
 	{
-	    try{
-            String path = new java.io.File("Projekt1.accdb").getAbsolutePath();
-        db ="JDBC:ODBC:Driver=Microsoft Access Driver (*.mdb, *.accdb); DBQ="+path;
-            doConnection();
-        } catch(NullPointerException ex){
-                ex.printStackTrace();
-            }
+		
+	}
+	public static void main(String[] args)
+	{
+		System.out.println("Próba po³¹czenia z baz¹ danych");
+		DbProcessor take1=new DbProcessor();
+		take1.createKoncertyList();
+		System.out.println("Ma³a zmiana");
+		
 	}
 	
-	public void doConnection(){
+	
+	public static void doConnection(){
+		 try{
+	            String path = new java.io.File("Projekt1.accdb").getAbsolutePath();
+	        db ="JDBC:ODBC:Driver=Microsoft Access Driver (*.mdb, *.accdb); DBQ="+path;
+	            doConnection();
+	        } catch(NullPointerException ex){
+	                ex.printStackTrace();
+	            }
         try{
             Class.forName("sun.jdbc.odbc.JdbcOdbcDriver");
             
@@ -58,7 +62,7 @@ public static void main(String[] args)
 
     }
 	
-	public boolean chekingPassword(String log,String pass)
+	public static boolean chekingPassword(String log,String pass)
 	{
 		try {
 			st=con.createStatement();
@@ -74,7 +78,7 @@ public static void main(String[] args)
 		
 	}
 	
-	public ArrayList<KlubComponent> createKlubComponents()
+	public static ArrayList<KlubComponent> createKlubComponents()
 	{
 		ArrayList<KlubComponent> result= new ArrayList<KlubComponent>();
 		try {
@@ -107,7 +111,7 @@ public static void main(String[] args)
 		}
 	}
 	
-	public ArrayList<Koncerty> createKoncertyList()
+	public static ArrayList<Koncerty> createKoncertyList()
 	{
 		ArrayList<Koncerty> result=new ArrayList<Koncerty>();
 		try {
@@ -131,7 +135,7 @@ public static void main(String[] args)
 		return result;
 	}
 	
-	public void disconect()
+	public static void disconect()
 	{
 		try {
 			con.close();
@@ -141,7 +145,7 @@ public static void main(String[] args)
 		}
 	}
 	
-	private byte[] GetImageBytesFromOLEField(byte[] oleFieldBytes) throws Exception
+	private static byte[] GetImageBytesFromOLEField(byte[] oleFieldBytes) throws Exception
     {
         final String BITMAP_ID_BLOCK = "BM";
         final String JPG_ID_BLOCK = "\u00FF\u00D8\u00FF";
