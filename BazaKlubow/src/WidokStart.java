@@ -24,13 +24,13 @@ import javax.swing.JScrollPane;
 
 
 public class WidokStart extends JPanel {	
-	private DbProcessor processor;
+	
 	private int columns=3;
 	private ArrayList<KlubComponent> listaKlubow;
 	private JPanel ciaglyPionowy;
 	
-	public WidokStart(DbProcessor proc){
-		processor=proc;
+	public WidokStart(){
+		
 		setLayout(new BorderLayout());
 	
 		/*
@@ -95,7 +95,7 @@ public class WidokStart extends JPanel {
 		con.add(mp);
 		
 		add(BorderLayout.NORTH,con);
-		listaKlubow=processor.createKlubComponents();
+		listaKlubow=DbProcessor.createKlubComponents();
 		ciaglyPionowy=new JPanel();
 		/*
 		BoxLayout box=new BoxLayout(ciaglyPionowy, BoxLayout.Y_AXIS); 

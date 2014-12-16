@@ -19,17 +19,18 @@ public class BazaFrame extends JFrame {
 	public BazaFrame()
 	{
 		 
-		DbProcessor processor=new DbProcessor();
+		
 		setSize(DEAFAULT_WIDTH, DEAFAULT_HEIGHT);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		DbProcessor.doConnection();
 		JPanel zmienny=new JPanel();
 		zmienny.setLayout(new CardLayout());
 		add(zmienny);
-		final WidokStart powitaj=new WidokStart(processor); 
+		final WidokStart powitaj=new WidokStart(); 
 		zmienny.add(powitaj,MENUSTART);
-		WidokPracMenu w1=new WidokPracMenu(processor);
+		WidokPracMenu w1=new WidokPracMenu();
 		zmienny.add(w1,PRAC_START);
-		WidokLogowanie log=new WidokLogowanie(processor);
+		WidokLogowanie log=new WidokLogowanie();
 		zmienny.add(log,LOG);
 		
 		

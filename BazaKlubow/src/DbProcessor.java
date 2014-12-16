@@ -34,11 +34,9 @@ import javax.swing.JComponent;
 		 try{
 	            String path = new java.io.File("Projekt1.accdb").getAbsolutePath();
 	        db ="JDBC:ODBC:Driver=Microsoft Access Driver (*.mdb, *.accdb); DBQ="+path;
-	            doConnection();
-	        } catch(NullPointerException ex){
-	                ex.printStackTrace();
-	            }
-        try{
+	         
+	       
+        
             Class.forName("sun.jdbc.odbc.JdbcOdbcDriver");
             
             con = DriverManager.getConnection(db);
@@ -59,7 +57,7 @@ import javax.swing.JComponent;
         	}
         	*/
         }
-
+		 System.out.println(con);
     }
 	
 	public static boolean chekingPassword(String log,String pass)

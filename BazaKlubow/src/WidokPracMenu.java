@@ -16,10 +16,10 @@ import javax.swing.JTextPane;
 public class WidokPracMenu extends JPanel {
 
 	public final static String info = "Witamy w programie";
-	private DbProcessor processor;
+
 	
-	public WidokPracMenu(DbProcessor proc) {
-		processor = proc;
+	public WidokPracMenu() {
+		
 		setLayout(new BorderLayout());
 		JTextField t1 = new JTextField(info);
 		add(BorderLayout.NORTH, t1);

@@ -16,7 +16,7 @@ import javax.swing.JTextField;
 
 public class WidokLogowanie extends JComponent {
 
-	private DbProcessor processor;
+	
 	private JLabel labelLog=new JLabel("Login:");
 	private JLabel labelPass=new JLabel("Has³o:");
 	private JTextField login=new JTextField();
@@ -28,8 +28,8 @@ public class WidokLogowanie extends JComponent {
 	
 	
 	
-	public WidokLogowanie(DbProcessor proc) {
-		processor=proc;
+	public WidokLogowanie() {
+		
 		addComponentListener(new ComponentListener() {
 			
 			@Override
@@ -79,7 +79,7 @@ public class WidokLogowanie extends JComponent {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-			 boolean aprove=processor.chekingPassword(login.getText(), password.getText());
+			 boolean aprove=DbProcessor.chekingPassword(login.getText(), password.getText());
 			 if(aprove)
 			 {
 				 CardLayout c =(CardLayout)WidokLogowanie.this.getParent().getLayout();
