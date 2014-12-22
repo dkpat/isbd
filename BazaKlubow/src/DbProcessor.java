@@ -59,6 +59,19 @@ import javax.swing.JComponent;
         }
 		 System.out.println(con);
     }
+	public static String getBandName(int NumerZespo³u)
+	{
+		try {
+			st=con.createStatement();
+			rs=st.executeQuery("SELECT NazwaZ FROM Zespo³y WHERE NrZespo³u=="+NumerZespo³u);
+			rs.next();
+			return rs.getString(0);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
 	
 	public static boolean chekingPassword(String log,String pass)
 	{
