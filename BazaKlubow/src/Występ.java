@@ -14,9 +14,9 @@ public class Wystêp
 	{
 		this.nrWystêpu=nrWystêpu;
 		this.czasTrwaniaW=czasTrwaniaW;
-		this.godzinaRozpoczêcia=this.godzinaRozpoczêcia;
+		this.godzinaRozpoczêcia=godzinaRozpoczêcia;
 		this.nrKoncertu=nrKoncertu;
-		this.nrZespo³u=this.nrZespo³u;
+		this.nrZespo³u=nrZespo³u;
 	}
 	
 	public int getnrWystêpu()
@@ -31,11 +31,11 @@ public class Wystêp
 	{
 		return godzinaRozpoczêcia;
 	}
-	public int getnrKoncertu()
+	public int getNrKoncertu()
 	{
 		return nrKoncertu;
 	}
-	public int getnrZespo³u()
+	public int getNrZespo³u()
 	{
 		return nrZespo³u;
 	}

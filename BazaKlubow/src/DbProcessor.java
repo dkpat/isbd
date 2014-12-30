@@ -63,16 +63,29 @@ import javax.swing.JComponent;
 	{
 		try {
 			st=con.createStatement();
-			rs=st.executeQuery("SELECT NazwaZ FROM Zespo³y WHERE NrZespo³u=="+NumerZespo³u);
+			rs=st.executeQuery("SELECT NazwaZ FROM Zespo³y WHERE NrZespo³u="+NumerZespo³u);
 			rs.next();
-			return rs.getString(0);
+			return rs.getString(1);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return null;
 	}
-	
+	public static String getClubName(int NumerKlubu)
+	{
+		try {
+			st=con.createStatement();
+			rs=st.executeQuery("SELECT NazwaK FROM Kluby WHERE NrKlubu="+NumerKlubu);
+			if (rs.next())
+				return rs.getString(1);
+			else return null;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
 	public static boolean chekingPassword(String log,String pass)
 	{
 		try {
@@ -122,20 +135,42 @@ import javax.swing.JComponent;
 		}
 	}
 	
-	public static ArrayList<Koncerty> createKoncertyList()
+	public static ArrayList<Wystêp> createWystêpyList(int nrKoncertu)
 	{
-		ArrayList<Koncerty> result=new ArrayList<Koncerty>();
+		ArrayList<Wystêp> result=new ArrayList<Wystêp>();
+		try {
+			st=con.createStatement();
+			rs=st.executeQuery("SELECT * FROM Wystêpy WHERE NrKoncertu="+nrKoncertu);
+			while(rs.next())
+			{
+				int nrWystêpu=rs.getInt("NrWystêpu");
+				String czasTrwaniaW=rs.getString("CzasTrawaniaW");
+				Timestamp godzinaRozpoczêcia=rs.getTimestamp("GodzinaRozpoczêcia");
+				int nrZespo³u=rs.getInt("NrZespo³u");
+				result.add(new Wystêp(nrWystêpu, czasTrwaniaW, godzinaRozpoczêcia, nrKoncertu, nrZespo³u));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return result;
+	}
+	
+	public static ArrayList<Koncert> createKoncertyList()
+	{
+		ArrayList<Koncert> result=new ArrayList<Koncert>();
 		try {
 			st=con.createStatement();
 			rs=st.executeQuery("SELECT * FROM KONCERTY");
 			while(rs.next())
 			{
 				int ID=rs.getInt("NrKoncertu");
+				String nawzaK=rs.getString("nazwaK");
 				Timestamp data=rs.getTimestamp("DataKoncertu");
 				int liczbaLudzi=rs.getInt("LiczbaLudzi");
 				BigDecimal cenaBiletu=rs.getBigDecimal("CenaBiletu");
 				int nrKlubu=rs.getInt("NrKlubu");
-				result.add(new Koncerty(ID, data, liczbaLudzi, cenaBiletu, nrKlubu));
+				result.add(new Koncert(ID,nawzaK, data, liczbaLudzi, cenaBiletu, nrKlubu));
 			}
 			
 		} catch (SQLException e) {

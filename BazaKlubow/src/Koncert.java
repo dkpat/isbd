@@ -1,17 +1,19 @@
 import java.math.BigDecimal;
 import java.sql.*;
 
-public class Koncerty {
+public class Koncert {
 
 	private int ID;
+	private String nazwaW;
 	private Timestamp data;
 	private int liczbaLudzi;
 	private BigDecimal cenaBiletu;
 	private int nrKlubu;
 	
-	public Koncerty(int id, Timestamp data, int liczbaLudzi,BigDecimal cenaBiletu, int nrKlubu)
+	public Koncert(int id, String nazwaW,Timestamp data, int liczbaLudzi,BigDecimal cenaBiletu, int nrKlubu)
 	{
 		this.ID=id;
+		this.nazwaW=nazwaW;
 		this.data=data;
 		this.liczbaLudzi=liczbaLudzi;
 		this.cenaBiletu=cenaBiletu;
@@ -38,7 +40,10 @@ public class Koncerty {
 	{
 		return nrKlubu;
 	}
-	
+	public String getNawzaW()
+	{
+		return nazwaW;
+	}
 	public String toString()
 	{
 		return "Koncert w klubie o nr. "+nrKlubu+" ,odbêdzie siê "+data;

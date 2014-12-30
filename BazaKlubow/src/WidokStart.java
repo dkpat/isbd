@@ -28,7 +28,9 @@ public class WidokStart extends JPanel {
 	private int columns=3;
 	private ArrayList<KlubComponent> listaKlubow;
 	private JPanel ciaglyPionowy;
-	
+	private JPanel con;
+	public static final String KLUBY_START="KS";
+	public static final String KONCERTY_WIDOK="KW";
 	public WidokStart(){
 		
 		setLayout(new BorderLayout());
@@ -37,7 +39,7 @@ public class WidokStart extends JPanel {
 		 * To tylko panel pomocniczy
 		 * na przycisk logowania, u góry po prawej
 		 */
-		JPanel con = new JPanel();
+		con = new JPanel();
 		/*
 		 * To z kolei panel 
 		 * na menu z lewej strony
@@ -113,19 +115,55 @@ public class WidokStart extends JPanel {
 		/*
 		 * przyciski dla bocznego panelu
 		 */
-		
+		JButton start=new JButton("Start");
 		JButton koncerty=new JButton("Koncerty");
 		JButton muzycy=new JButton("Zespo³y");
 		JButton archiwum=new JButton("Archiwum");
+		bocznyL.add(start);
 		bocznyL.add(koncerty);
 		bocznyL.add(muzycy);
 		bocznyL.add(archiwum);
 		pomocL.add(bocznyL);
+		
+		
 		add(BorderLayout.WEST,pomocL);
 		
 		manageColumns(ciaglyPionowy);
+		/*
+		 * Zmienny rozk³ad, bedzie w centrum
+		 * zmiania zawartoœæ po nociœniêciu wschodnich
+		 * przycisków
+		 */
+		final CardLayout semafor=new CardLayout(); 
+		/*
+		 * Panel umiejscowiony na œrodku
+		 * ma ustawiony CardLayout
+		 */
+		final JPanel centralny=new JPanel();
+		centralny.setLayout(semafor);
+		
 		JScrollPane panelPrzewijany=new JScrollPane(ciaglyPionowy);
-		add(BorderLayout.CENTER,panelPrzewijany);
+		centralny.add(panelPrzewijany, WidokStart.KLUBY_START);
+		WidokKoncertyU koncertyWidok=new WidokKoncertyU(); 
+		centralny.add(koncertyWidok,KONCERTY_WIDOK);
+		add(BorderLayout.CENTER,centralny);
+		
+		start.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				semafor.show(centralny, WidokStart.KLUBY_START);;
+				
+			}
+		});
+		koncerty.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				semafor.show(centralny,WidokStart.KONCERTY_WIDOK);
+				
+			}
+		});
 	}
 	public void setNumberOfColumns(int c)
 	{
