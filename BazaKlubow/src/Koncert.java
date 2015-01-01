@@ -8,15 +8,17 @@ public class Koncert {
 	private Timestamp data;
 	private int liczbaLudzi;
 	private BigDecimal cenaBiletu;
+	private Timestamp godzOtw;
 	private int nrKlubu;
 	
-	public Koncert(int id, String nazwaW,Timestamp data, int liczbaLudzi,BigDecimal cenaBiletu, int nrKlubu)
+	public Koncert(int id, String nazwaW,Timestamp data, int liczbaLudzi,BigDecimal cenaBiletu, Timestamp godzOtw , int nrKlubu)
 	{
 		this.ID=id;
 		this.nazwaW=nazwaW;
 		this.data=data;
 		this.liczbaLudzi=liczbaLudzi;
 		this.cenaBiletu=cenaBiletu;
+		this.godzOtw=godzOtw;
 		this.nrKlubu=nrKlubu;
 	}
 	
@@ -43,6 +45,10 @@ public class Koncert {
 	public String getNawzaW()
 	{
 		return nazwaW;
+	}
+	public Timestamp getGodzOtw()
+	{
+		return godzOtw;
 	}
 	public String toString()
 	{

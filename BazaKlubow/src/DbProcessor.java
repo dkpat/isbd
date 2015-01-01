@@ -169,8 +169,9 @@ import javax.swing.JComponent;
 				Timestamp data=rs.getTimestamp("DataKoncertu");
 				int liczbaLudzi=rs.getInt("LiczbaLudzi");
 				BigDecimal cenaBiletu=rs.getBigDecimal("CenaBiletu");
+				Timestamp godzOtw=rs.getTimestamp("GodzOtw");
 				int nrKlubu=rs.getInt("NrKlubu");
-				result.add(new Koncert(ID,nawzaK, data, liczbaLudzi, cenaBiletu, nrKlubu));
+				result.add(new Koncert(ID,nawzaK, data, liczbaLudzi, cenaBiletu, godzOtw,nrKlubu));
 			}
 			
 		} catch (SQLException e) {

@@ -80,7 +80,7 @@ public class KlubComponent extends JComponent {
 		add(adresLabel,new GBC(0, 4).setInsets(5, 0, 0, 0));
 		add(pLabel,new GBC(1, 4).setAnchor(GBC.EAST).setInsets(5, 0, 0, KlubComponent.verMarg/2));
 		add(imgLabel,new GBC(1, 0, 1, 4).setAnchor(GBC.CENTER).setWeight(2, 0));
-		
+		System.out.println(HEIGHT);
 	}
 	
 	
