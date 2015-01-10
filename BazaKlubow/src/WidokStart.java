@@ -31,6 +31,7 @@ public class WidokStart extends JPanel {
 	private JPanel con;
 	public static final String KLUBY_START="KS";
 	public static final String KONCERTY_WIDOK="KW";
+	public final static String ZESPOLY_START="Zespo造_U";
 	public WidokStart(){
 		
 		setLayout(new BorderLayout());
@@ -117,11 +118,11 @@ public class WidokStart extends JPanel {
 		 */
 		JButton start=new JButton("Start");
 		JButton koncerty=new JButton("Koncerty");
-		JButton muzycy=new JButton("Zespo造");
+		JButton zespo造=new JButton("Zespo造");
 		JButton archiwum=new JButton("Archiwum");
 		bocznyL.add(start);
 		bocznyL.add(koncerty);
-		bocznyL.add(muzycy);
+		bocznyL.add(zespo造);
 		bocznyL.add(archiwum);
 		pomocL.add(bocznyL);
 		
@@ -146,6 +147,11 @@ public class WidokStart extends JPanel {
 		centralny.add(panelPrzewijany, WidokStart.KLUBY_START);
 		WidokKoncertyU koncertyWidok=new WidokKoncertyU(); 
 		centralny.add(koncertyWidok,KONCERTY_WIDOK);
+		WidokZespolyU zespo造Panel=new WidokZespolyU();
+		JScrollPane panelPrzewijany2=new JScrollPane(zespo造Panel);
+		centralny.add(panelPrzewijany2,WidokStart.ZESPOLY_START);
+		
+		
 		add(BorderLayout.CENTER,centralny);
 		
 		start.addActionListener(new ActionListener() {
@@ -164,6 +170,14 @@ public class WidokStart extends JPanel {
 				
 			}
 		});
+		zespo造.addActionListener(new ActionListener() {			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				semafor.show(centralny, WidokStart.ZESPOLY_START);
+				
+			}
+		});
+		
 	}
 	public void setNumberOfColumns(int c)
 	{

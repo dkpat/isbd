@@ -16,6 +16,7 @@ public class BazaFrame extends JFrame {
 	public final static String PRAC_START="WidokPracownik";
 	public final static String LOG="logowanie";
 	
+	
 	public BazaFrame()
 	{
 		 
@@ -32,6 +33,7 @@ public class BazaFrame extends JFrame {
 		zmienny.add(w1,PRAC_START);
 		WidokLogowanie log=new WidokLogowanie();
 		zmienny.add(log,LOG);
+		
 		
 		
 		

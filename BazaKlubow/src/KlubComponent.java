@@ -54,7 +54,7 @@ public class KlubComponent extends JComponent {
 			InputStream in=new ByteArrayInputStream(zdjêcie);
 			try {
 				BufferedImage bImageFromConvert =ImageIO.read(in);
-				System.out.println(bImageFromConvert);
+				
 				if(bImageFromConvert!=null)
 					this.zdjêcie=new ImageIcon(bImageFromConvert.getScaledInstance(100, 100, Image.SCALE_SMOOTH));
 			
