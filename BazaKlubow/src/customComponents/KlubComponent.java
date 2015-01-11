@@ -1,3 +1,4 @@
+package customComponents;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -11,6 +12,8 @@ import java.io.InputStream;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.Border;
+
+import customGraphics.*;
 
 
 public class KlubComponent extends JComponent {

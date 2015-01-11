@@ -1,3 +1,4 @@
+package widokiG;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
@@ -21,6 +22,13 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+
+import polaczenieZbaz¹.DbProcessor;
+import widokiU.WidokKoncertyU;
+import widokiU.WidokZespolyU;
+import customComponents.KlubComponent;
+import customGraphics.GBC;
+import customGraphics.MyButtonUI;
 
 
 public class WidokStart extends JPanel {	

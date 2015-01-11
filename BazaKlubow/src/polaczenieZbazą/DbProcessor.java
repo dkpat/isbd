@@ -1,3 +1,4 @@
+package polaczenieZbaz¹;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
@@ -19,6 +20,11 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+
+import customComponents.KlubComponent;
+import klasyBazodanowe.*;
+
+
 
 public final class DbProcessor {
 	private static Connection con;

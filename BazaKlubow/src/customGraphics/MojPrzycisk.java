@@ -1,3 +1,4 @@
+package customGraphics;
 
 import javax.swing.*;
 import java.awt.*;

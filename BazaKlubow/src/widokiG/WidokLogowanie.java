@@ -1,3 +1,4 @@
+package widokiG;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Frame;
@@ -12,6 +13,9 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+
+import customGraphics.GBC;
+import polaczenieZbaz¹.DbProcessor;
 
 
 public class WidokLogowanie extends JComponent {

@@ -1,3 +1,4 @@
+package customComponents;
 import java.awt.*;
 import java.awt.font.FontRenderContext;
 import java.awt.geom.Line2D;
@@ -5,6 +6,9 @@ import java.awt.geom.Path2D;
 import java.awt.geom.Rectangle2D;
 
 import javax.swing.*;
+
+import polaczenieZbaz¹.DbProcessor;
+import klasyBazodanowe.Wystêp;
 public class WystepComponent extends JComponent 
 {
 	

@@ -1,3 +1,4 @@
+package widokiG;
 import java.awt.CardLayout;
 import java.awt.Dimension;
 import java.awt.EventQueue;
@@ -6,6 +7,9 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 
 import javax.swing.*;
+
+import polaczenieZbaz¹.DbProcessor;
+import widokiP.WidokPracMenu;
 
 
 public class BazaFrame extends JFrame {

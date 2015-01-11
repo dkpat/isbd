@@ -1,3 +1,4 @@
+package klasyBazodanowe;
 import java.sql.*;
 
 
