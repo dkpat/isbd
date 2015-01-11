@@ -256,7 +256,7 @@ public final class DbProcessor {
 			return null;
 		}
 	}
-
+	
 	public static ArrayList<Wystêp> createWystêpyList(int nrKoncertu) {
 		ArrayList<Wystêp> result = new ArrayList<Wystêp>();
 		try {
@@ -278,6 +278,50 @@ public final class DbProcessor {
 		}
 		return result;
 	}
+	
+	/*
+	 * Coœ tu nie dzia³a niestety...
+	 */
+	
+	public static void addInstrument(int id, String nazwa, String typ){
+		PreparedStatement pstmt = null;
+		try{
+			pstmt = con.prepareStatement("INSERT INTO Instrumenty VALUES (?,?,?)");
+			pstmt.setInt(1, id);
+			pstmt.setString(2, nazwa);
+			pstmt.setString(3, typ);
+			boolean b = pstmt.execute();
+			if(b==true)
+				System.out.println("Dodano instrument: " + id + " " + nazwa + " " + typ);
+		}
+		catch (SQLException e){
+			e.printStackTrace();
+			con = null;
+		}
+	}
+	
+	public static List<Instrument> createAllInstrumentList(){
+		List<Instrument> instrumenty = new ArrayList<Instrument>();
+		try{
+			st = con.createStatement();
+			rs = st.executeQuery("SELECT * FROM Instrumenty");
+		
+			while(rs.next()){
+			int nrInstr = rs.getInt("NrInstrumentu");
+			String nazwaIn = rs.getString("NazwaIn");
+			String typIn = rs.getString("TypIn");
+			Instrument nowyIn = new Instrument(nrInstr, typIn, nazwaIn);
+			instrumenty.add(nowyIn);
+			}
+		}
+			catch (SQLException e){
+				e.printStackTrace();
+				con = null;
+				return null;
+			}
+		return instrumenty;
+	}
+	
 
 	public static List<Instrument> createInstrumentList(int nrMuzyka) {
 		List<Instrument> instrumenty = new LinkedList<Instrument>();
