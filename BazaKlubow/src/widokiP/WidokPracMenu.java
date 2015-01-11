@@ -3,16 +3,24 @@ import java.awt.BorderLayout;
 import java.awt.Button;
 import java.awt.CardLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
+
+import polaczenieZbaz¹.DbProcessor;
+import klasyBazodanowe.Koncert;
 
 public class WidokPracMenu extends JPanel {
 
@@ -32,14 +40,14 @@ public class WidokPracMenu extends JPanel {
 		//stworz przyciski do lewego menu
 		JButton koncerty = new JButton("Koncerty");
 		JButton zespoly = new JButton("Zespo³y");
-		JButton istrumenty = new JButton("Istrumenty");
+		JButton instrumenty = new JButton("Instrumenty");
 		
 		//Testowy przycisk do przechodzenia miêdzy kartami
 		//JButton next = new JButton("Next");
 		
 		bocznyL.add(koncerty);
 		bocznyL.add(zespoly);
-		bocznyL.add(istrumenty);
+		bocznyL.add(instrumenty);
 		//bocznyL.add(next);
 		
 		//panel pomocniczy w którym bêd¹ znajdowaæ siê przyciski
@@ -54,7 +62,7 @@ public class WidokPracMenu extends JPanel {
 		//panele œrodkowe
 		JPanel panelKoncerty = new JPanel();
 		JPanel panelZespoly = new JPanel();
-		JPanel panelIstrumenty = new JPanel();
+		JPanel panelInstrumenty = new JPanel();
 		
 		/*
 		 * ustawi³em im tymczasowo ró¿ne kolorki ¿eby ³atwiej je identyfikowaæ,
@@ -62,13 +70,13 @@ public class WidokPracMenu extends JPanel {
 		 */
 		panelKoncerty.setBackground(Color.CYAN);
 		panelZespoly.setBackground(Color.GRAY);
-		panelIstrumenty.setBackground(Color.BLUE);
+		panelInstrumenty.setBackground(Color.BLUE);
 		
 		final JPanel srodek = new JPanel(new CardLayout());
 		
 		srodek.add(panelKoncerty, "Koncerty");
 		srodek.add(panelZespoly, "Zespo³y");
-		srodek.add(panelIstrumenty, "Istrumenty");
+		srodek.add(panelInstrumenty, "Instrumenty");
 		
 		ActionListener listenerPrzycisku = new ActionListener(){
 			@Override
@@ -81,7 +89,7 @@ public class WidokPracMenu extends JPanel {
 		
 		koncerty.addActionListener(listenerPrzycisku);
 		zespoly.addActionListener(listenerPrzycisku);
-		istrumenty.addActionListener(listenerPrzycisku);
+		instrumenty.addActionListener(listenerPrzycisku);
 		
 		/*
 		next.addActionListener(new ActionListener(){
@@ -94,9 +102,45 @@ public class WidokPracMenu extends JPanel {
 		});
 		*/
 		
+		TabelaKoncertow tabelka = new TabelaKoncertow();
+		panelKoncerty.add(tabelka);
+		
 		add(BorderLayout.CENTER, srodek);
 		
 	
 	}
 
+	public class TabelaKoncertow extends JPanel {
+		public TabelaKoncertow(){
+			super(new GridLayout(1,0));
+			String[] kolumny = {"ID", "Wystêp", "Data", "Liczba osób", "Cena", "Godzina", "Nr klubu"};
+			
+			Object[][] object = new Object[10][7];
+			
+			ArrayList<Koncert> listaKoncertow = new ArrayList<Koncert>();
+			listaKoncertow = DbProcessor.createKoncertyList();
+			
+			
+			int i=0;
+			for(Koncert konc : listaKoncertow){
+				object[i][0] = konc.getID();
+				object[i][1] = konc.getNawzaW();
+				object[i][2] = konc.getData();
+				object[i][3] = konc.getliczbaLudzi();
+				object[i][4] = konc.getCenaBiletu();
+				object[i][5] = konc.getGodzOtw();
+				object[i][6] = konc.getNrKlubu();
+				i++;
+			}
+			
+			JTable table = new JTable (object, kolumny);
+			table.setPreferredScrollableViewportSize(new Dimension(600, 300));
+			table.setFillsViewportHeight(true);
+			
+			JScrollPane scrollPane = new JScrollPane(table);
+			add(scrollPane);
+		}
+	}
+	
 }
+
