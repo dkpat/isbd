@@ -2,13 +2,19 @@ package widokiP;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -67,9 +73,9 @@ public class WidokPracMenu extends JPanel {
 		 * bo nic w nich nie ma jeszcze 
 		 */
 		panelKoncerty.setBackground(Color.GRAY);
-		panelZespoly.setBackground(Color.CYAN);
-		panelMuzycy.setBackground(Color.GREEN);
-		panelInstrumenty.setBackground(Color.BLUE);
+		panelZespoly.setBackground(Color.GRAY);
+		panelMuzycy.setBackground(Color.GRAY);
+		panelInstrumenty.setBackground(Color.GRAY);
 		
 		final JPanel srodek = new JPanel(new CardLayout());
 		
@@ -92,28 +98,39 @@ public class WidokPracMenu extends JPanel {
 		instrumenty.addActionListener(listenerPrzycisku);
 		muzycy.addActionListener(listenerPrzycisku);
 		
-		/*
-		next.addActionListener(new ActionListener(){
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				CardLayout cardLayout = (CardLayout) srodek.getLayout();
-				cardLayout.next(srodek);
-			}
-			
-		});
-		*/
-		
 		TabelaKoncertow tabelka = new TabelaKoncertow(650,400);
 		panelKoncerty.add(tabelka);
 		
 		TabelaInstrumentow tabI = new TabelaInstrumentow(650,400);
 		panelInstrumenty.add(tabI);
 		
+		JButton dodajKoncert = new JButton("Dodaj koncert");
+		dodajKoncert.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent arg0){
+				createFrame();
+			}
+		});
+		
+		panelKoncerty.add(BorderLayout.SOUTH, dodajKoncert);
 		
 		add(BorderLayout.CENTER, srodek);
 		
 	
 	}
-
+	public static void createFrame(){
+		EventQueue.invokeLater(new Runnable(){
+			@Override
+			public void run(){
+				JFrame frame = new JFrame("Dodaj nowy koncert");
+				frame.setSize(500, 250);
+				frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+				
+				addKoncertForm panel = new addKoncertForm();
+				frame.add(panel);
+				//frame.pack();
+				frame.setVisible(true);
+			}
+		});
+	}
 }
 
