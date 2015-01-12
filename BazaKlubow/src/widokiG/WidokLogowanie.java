@@ -84,6 +84,7 @@ public class WidokLogowanie extends JComponent {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 			 boolean aprove=DbProcessor.chekingPassword(login.getText(), password.getText());
+			 aprove=true;//Tylko na czas testowania, póŸniej usun¹æ
 			 if(aprove)
 			 {
 				 CardLayout c =(CardLayout)WidokLogowanie.this.getParent().getLayout();

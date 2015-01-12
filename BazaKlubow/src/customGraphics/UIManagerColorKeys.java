@@ -3,6 +3,9 @@ import java.awt.Color;
 import java.util.*;
 import java.util.Map.Entry;
 
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.border.Border;
 
@@ -17,7 +20,7 @@ public class UIManagerColorKeys {
 	    Set<Entry<Object, Object>> entries = UIManager.getLookAndFeelDefaults().entrySet();
 	    for (Entry entry : entries)
 	    {
-	      if (entry.getValue() instanceof Border)
+	      if (entry.getValue() instanceof JFrame)
 	      {
 	        colorKeys.add((String) entry.getKey());
 	      }
