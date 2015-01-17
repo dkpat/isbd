@@ -1,7 +1,6 @@
 package widokiP;
 
 import java.awt.BorderLayout;
-import java.awt.Button;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -12,36 +11,38 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.image.BufferedImage;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.ArrayList;
-import java.util.NavigableMap;
-import java.util.Set;
-import java.util.SortedMap;
 import java.util.Stack;
 import java.util.TreeMap;
-import java.util.Iterator;
-import java.util.concurrent.ConcurrentHashMap;
 
-import javax.print.attribute.standard.Finishings;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.JTextPane;
 import javax.swing.SwingConstants;
-import javax.swing.plaf.ColorUIResource;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.text.Document;
 
+import customCotroller.BandLayer;
 import customGraphics.*;
 import polaczenieZbaz¹.DbProcessor;
-import klasyBazodanowe.Zespol;
+import klasyBazodanowe.Muzyk;
+import customStructure.DoublePair;
 import customGraphics.GBC;
+import customStructure.DoublePair;
+import customStructure.RodzajKomponentu;
+import customStructure.RodzajTabeli;
 import customStructure.SortingImporatnce;
 
 public class WidokPracMenu extends JPanel {
@@ -84,7 +85,6 @@ public class WidokPracMenu extends JPanel {
 		// panele œrodkowe
 		JPanel panelKoncerty = new JPanel();
 		JPanel panelZespoly = new JPanel();
-
 		JPanel panelIstrumenty = new JPanel();
 
 		/*
@@ -94,18 +94,52 @@ public class WidokPracMenu extends JPanel {
 		panelKoncerty.setBackground(Color.CYAN);
 		panelZespoly.setBackground(Color.GRAY);
 
+		
+		
+		//Uwaga!!!!!!! To powinno byæ gdzieœ indziej - tworzê poszczególne rekordy zespo³ów
+				/*
+		header.setLayout(new GridBagLayout());
 		JLabel nrZ = new JLabel("Nr Zespo³u");
 		JLabel naz = new JLabel("Nazwa");
 		JLabel datU = new JLabel("Data uformowania");
 		JLabel[] tab = { nrZ, naz, datU };
 
-		JPanel tabZespoly = createHeader(tab);
+		createHeader(header,tab,0,0);
+		
+		
+		
 		List<Zespol> testowe = DbProcessor.getAllBands();
 		for (Zespol z : testowe)
-			createBandRow(tabZespoly, z);
+		{
+			int IdZ=z.getID();
+			RodzajKomponentu IDComp=RodzajKomponentu.UNEDITABLE_INT;
+			
+			String nazwa=z.getNazwaZespolu();
+			RodzajKomponentu nazwaComp=RodzajKomponentu.EDITABLE_TEXT;
+			
+			Timestamp date= z.getDataZalozenia();
+			RodzajKomponentu dataComp=RodzajKomponentu.DATE_ONLY_YEAR;
+			
+			RodzajTabeli tabela=RodzajTabeli.ZESPO£Y;
+			tabela.ID=z.getID();
+			
+			RodzajKomponentu[] species={IDComp,nazwaComp,dataComp};
+			Object[] data={IdZ,nazwa,date};
+			createDataRow(header,species,data,tabela);
+		}
 
-		panelZespoly.add(tabZespoly);
-
+		panelZespoly.add(header);
+		*/
+		//Zamiast tego nowe u góry nowy kody
+		JPanel gridZespoly=new JPanel();
+		gridZespoly.setLayout(new GridBagLayout());
+		BandLayer warstwaNadrz=new BandLayer(gridZespoly,-1);
+		warstwaNadrz.initializeGraphicsRepresentation();
+		panelZespoly.add(gridZespoly);
+		
+		
+		
+		
 		panelIstrumenty.setBackground(Color.BLUE);
 
 		final JPanel srodek = new JPanel(new CardLayout());
@@ -152,13 +186,186 @@ public class WidokPracMenu extends JPanel {
 		return stos;
 	}
 
-	public static void createBandRow(JPanel panel, Zespol zespol) {
+	public static DoublePair createDataRow(JPanel panel,RodzajKomponentu[] species,Object[] data,JPanel child,RodzajTabeli tab) {
+		//Tablica komponentów do póŸniejszego zwrócenia
+		Component[] components=new Component[data.length+1];
+		
+		
+		
+		//Tworze przyciski do anulowania i cofania
+		JButton update = new JButton("aktualizuj");
+		JButton cancel = new JButton("cofnij");
+		final JPanel funcionButtons=new JPanel();
+		funcionButtons.setVisible(false);
+		funcionButtons.add(update);
+		funcionButtons.add(cancel);
+		//tworzê check ox
+		JCheckBox box=new JCheckBox();
+		panel.add(box, new GBC(GBC.RELATIVE, GBC.RELATIVE).setAnchor(GBC.EAST));
+		
+		for(int i=0;i<species.length;i++)
+		{
+			switch (species[i]) {
+			case EDITABLE_TEXT:
+				String text=(String)data[i];
+				JTextField editableT=new JTextField(text);
+				editableT.setHorizontalAlignment(SwingConstants.CENTER);
+				Document docEditable_Text=editableT.getDocument();
+				
+					docEditable_Text.addDocumentListener(new DocumentListener() {
+					
+					@Override
+					public void removeUpdate(DocumentEvent e) {
+						funcionButtons.setVisible(true);
+						
+					}
+					
+					@Override
+					public void insertUpdate(DocumentEvent e) {
+						funcionButtons.setVisible(true);
+						
+					}
+					
+					@Override
+					public void changedUpdate(DocumentEvent e) {
+						funcionButtons.setVisible(true);
+						
+					}
+				});
+			
+				panel.add(editableT, new GBC(GBC.RELATIVE, GBC.RELATIVE).setIpad(HorizontalGapIntTab, 0)
+						.setFill(GBC.HORIZONTAL));
+				components[i]=editableT;
+				break;
+				
+			case IMAGE:
+				String imageD=String.format("%.20s",data[i].toString());
+				JTextField unImgDisc=new JTextField(imageD);
+				unImgDisc.setHorizontalAlignment(SwingConstants.CENTER);
+				unImgDisc.setEditable(false);
+				panel.add(unImgDisc, new GBC(GBC.RELATIVE, GBC.RELATIVE).setIpad(HorizontalGapIntTab, 0)
+						.setFill(GBC.HORIZONTAL));
+				components[i]=unImgDisc;
+				break;
+				
+				
+				
+			case DATE_ONLY_YEAR:
+				Timestamp date=(Timestamp)data[i];
+				JFormattedTextField dateText=new JFormattedTextField(String.format("%tY", date));
+				dateText.setHorizontalAlignment(SwingConstants.CENTER);
+				
+				Document docDateOnlyYear=dateText.getDocument();
+		
+				
+				
+				dateText.addPropertyChangeListener("value", new PropertyChangeListener() {
+					
+					@Override
+					public void propertyChange(PropertyChangeEvent evt) {
+						String old=(String) evt.getOldValue();
+						String current=(String) evt.getNewValue();
+						if(!old.equals(current))
+						{
+							funcionButtons.setVisible(true);
+						}
+						
+						
+					}
+				});
+				
+				panel.add(dateText, new GBC(GBC.RELATIVE, GBC.RELATIVE).setIpad(HorizontalGapIntTab, 0)
+						.setFill(GBC.HORIZONTAL));
+				components[i]=dateText;
+				
+				break;
+			case DATE_DD_MM_YYYY:
+				Timestamp dateClasic=(Timestamp)data[i];
+				JFormattedTextField dateTextClassic=new JFormattedTextField(String.format("%tF", dateClasic));
+				dateTextClassic.setHorizontalAlignment(SwingConstants.CENTER);
+				
+			//	Document docDateOnlyYear=dateText.getDocument();
+		
+				
+				
+				dateTextClassic.addPropertyChangeListener("value", new PropertyChangeListener() {
+					
+					@Override
+					public void propertyChange(PropertyChangeEvent evt) {
+						String old=(String) evt.getOldValue();
+						String current=(String) evt.getNewValue();
+						if(!old.equals(current))
+						{
+							funcionButtons.setVisible(true);
+						}
+						
+						
+					}
+				});
+				
+				panel.add(dateTextClassic, new GBC(GBC.RELATIVE, GBC.RELATIVE).setIpad(HorizontalGapIntTab, 0)
+						.setFill(GBC.HORIZONTAL));
+				components[i]=dateTextClassic;
+				
+				break;
+			case UNEDITABLE_INT:
+				int uneditableInt=(int)data[i];
+				JTextField uneditableIntText=new JFormattedTextField(String.format("%d", uneditableInt));
+				uneditableIntText.setEditable(false);
+				uneditableIntText.setHorizontalAlignment(SwingConstants.CENTER);
+				panel.add(uneditableIntText, new GBC(GBC.RELATIVE, GBC.RELATIVE).setIpad(HorizontalGapIntTab, 0)
+						.setFill(GBC.HORIZONTAL));
+				components[i]=uneditableIntText;
+				break;
+				
+			case UNEDITABLE_TEXT:
+				String uneditableText=(String)data[i];
+				JTextField uneditablTextField=new JFormattedTextField(String.format("%s", uneditableText));
+				uneditablTextField.setEditable(false);
+				uneditablTextField.setHorizontalAlignment(SwingConstants.CENTER);
+				panel.add(uneditablTextField, new GBC(GBC.RELATIVE, GBC.RELATIVE).setIpad(HorizontalGapIntTab, 0)
+						.setFill(GBC.HORIZONTAL));
+				components[i]=uneditablTextField;
+				break;
+			
+
+			default:
+				break;
+			}
+		}
+		panel.add(funcionButtons, new GBC(GBC.RELATIVE, GBC.RELATIVE).setAnchor(GBC.WEST));
+		JPanel luka=new JPanel();
+		luka.setBorder(BorderFactory.createLineBorder(Color.blue));
+		panel.add(luka, new GBC(GBC.RELATIVE, GBC.RELATIVE,GBC.REMAINDER,1).setFill(GBC.BOTH));
+		components[components.length-1]=luka;
+		if(child!=null){
+			System.out.println("Dodaje dziecko");
+			panel.add(child, new GBC(GBC.RELATIVE,GBC.RELATIVE,GBC.REMAINDER,1).setInsets(5, 50, 5, 0));
+		}
+		return new DoublePair(box, components, funcionButtons,luka);
+		/*
+		switch (tab) {
+		case ZESPO£Y:
+			JPanel listOFMembers=createListOfMembers(tab.ID);
+			panel.add(listOFMembers, new GBC(0, GBC.RELATIVE,GBC.REMAINDER,1).setInsets(5,30, 15, 0));
+			break;
+
+		default:
+			break;
+		}
+		*/
+		
+		
+		
+		
+		/*
+		
 		JTextField id = new JTextField(new Integer(zespol.getID()).toString());
 		JTextField nazwa = new JTextField(zespol.getNazwaZespolu());
 		JTextField data = new JTextField(String.format("%tF",
 				zespol.getDataZalozenia()));
-		JButton button = new JButton("aktualizuj");
-		button.setVisible(false);
+		
+		
 		id.setHorizontalAlignment(SwingConstants.CENTER);
 		nazwa.setHorizontalAlignment(SwingConstants.CENTER);
 		data.setHorizontalAlignment(SwingConstants.CENTER);
@@ -170,12 +377,18 @@ public class WidokPracMenu extends JPanel {
 						.setFill(GBC.HORIZONTAL));
 		panel.add(data, new GBC(2, GBC.RELATIVE)
 				.setIpad(HorizontalGapIntTab, 0).setFill(GBC.HORIZONTAL));
-		panel.add(button, new GBC(3, GBC.RELATIVE));
+		*/
+		
+		
+		
+		//A tutaj tworzê nag³ówek gotowy przyj¹æ listê cz³onków,
+		
+		
+	
 	}
 
-	public static JPanel createHeader(final JLabel[] tab) {
-		JPanel header = new JPanel();
-		header.setLayout(new GridBagLayout());
+	public static void createHeader(JPanel header,final JLabel[] tab,int xStart,int yStart) {
+		
 		JPanel[] sortGroups = new JPanel[tab.length];
 		SortButton[] strzalki=new SortButton[tab.length];
 		final Color backOrginal = tab[0].getBackground();
@@ -294,14 +507,11 @@ public class WidokPracMenu extends JPanel {
 			label.setBorder(BorderFactory.createLineBorder(Color.BLACK));// obramowanie
 			label.setHorizontalAlignment(SwingConstants.CENTER);// wyrównanie
 			label.setOpaque(true); // w³aœciwoœc ustawiona by umo¿liwiæ zmianê
-									// t³a
+								   // t³a
 			label.addMouseListener(adapter);
 		}
 
-		/*
-		 * //ustawiam s³uczaczy nrZ.addMouseListener(adapter);
-		 * naz.addMouseListener(adapter); datU.addMouseListener(adapter);
-		 */
+		
 
 		for (int i = 0; i < tab.length; i++) {
 			sortGroups[i] = new JPanel();
@@ -312,7 +522,12 @@ public class WidokPracMenu extends JPanel {
 			sButt.setVisible(false);
 			sortGroup.add(sButt);
 			// sortGroup.addMouseListener(adapter);
-			header.add(sortGroup, new GBC(i, 0).setIpad(HorizontalGapIntTab, 0)
+			
+			
+			//do panelu nag³ówkowego dodaje poszczegolne Labele
+		
+			
+			header.add(sortGroup, new GBC(xStart+i+1, yStart).setIpad(HorizontalGapIntTab, 0)
 					.setFill(GBC.HORIZONTAL));
 			sButt.addMouseListener(dlaStrza³ki);
 			if(i==2)
@@ -320,16 +535,65 @@ public class WidokPracMenu extends JPanel {
 			
 
 		}
-		/*
-		 * zespoly.add(nrZ,new GBC(0,0).setIpad(HorizontalGapIntTab,
-		 * 0).setFill(GBC.HORIZONTAL)); zespoly.add(naz,new
-		 * GBC(1,0).setIpad(HorizontalGapIntTab, 0).setFill(GBC.HORIZONTAL));
-		 * zespoly.add(datU,new GBC(2,0).setIpad(HorizontalGapIntTab,
-		 * 0).setFill(GBC.HORIZONTAL));
-		 */
-		header.add(new JPanel(), new GBC(3, 0, GBC.REMAINDER, 1));
-		return header;
-
+		JPanel pom=new JPanel();
+		pom.setBorder(BorderFactory.createLineBorder(Color.ORANGE));
+		header.add(pom, new GBC(GBC.RELATIVE, yStart, GBC.REMAINDER, 1).setFill(GBC.HORIZONTAL));//Dodaje pusty Panel do ostaniej komorki wierszu
+	
+															 //Taka sztuczka, ¿eby przygotowaæ siê na szerokie "dzieci-lista cz³onków"
+																			 //byc mo¿e zbêdne, do sprawdzenia w przysz³oœci	
 	}
 
+	
+	public static JPanel createListOfMembers(int BandID){
+		//najpierw trzeba utworzyæ nag³ówek + label tytu³owy 
+		JPanel listOFMembers=new JPanel();
+		listOFMembers.setBorder(BorderFactory.createLineBorder(Color.red));
+		listOFMembers.setLayout(new GridBagLayout());
+		JLabel title= new JLabel("cz³onkowie:");
+		
+		//towrzê tablice labeli nag³ówkowych
+				JLabel nazwisko=new JLabel("Nazwisko");
+				JLabel imiê=new JLabel("Imiê");
+				JLabel dataU=new JLabel("Data Urodzenia");
+				JLabel dataS=new JLabel("Data Œmierci");
+				JLabel dataD=new JLabel("Do³¹czy³");
+				JLabel dataO=new JLabel("Odszed³");
+				JLabel[] tab={imiê,nazwisko,dataU,dataS,dataD,dataO};
+				
+		
+		//dodaje tytu³ i pust¹ komórkê
+		title.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		listOFMembers.add(title, new GBC(0, 0));
+		JPanel pom=new JPanel();
+		pom.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		listOFMembers.add(pom, new GBC(0,1,1,GBC.REMAINDER).setFill(GBC.HORIZONTAL));
+	
+		//Uruchamiam procedure dodawania labeli naglowkowych
+		createHeader(listOFMembers, tab,1,1);
+		
+		List<Muzyk>members=DbProcessor.createMusicianList(BandID);
+		
+		
+		
+		
+		return listOFMembers;
+	}
+	public static void createFooter(JPanel panel,JComponent comboBox,JButton deletButton,JPanel gap ,int HeaderCount) {
+		//deletButton.setVisible(false);
+		panel.add(comboBox, new GBC(1,GBC.RELATIVE,HeaderCount,1).setFill(GBC.BOTH));
+		
+		//pom.setBorder(BorderFactory.createLineBorder(Color.red));
+		panel.add(gap, new GBC(GBC.RELATIVE,GBC.RELATIVE,GBC.REMAINDER,1).setFill(GBC.BOTH));
+		panel.add(deletButton,new GBC(1, GBC.RELATIVE,HeaderCount,1).setAnchor(GBC.EAST).setInsets(5, 0, 0, 0));
+		
+		
+	}
+	
+	
+	public static void createMusicRow()
+	{
+		
+	}
 }
+
+

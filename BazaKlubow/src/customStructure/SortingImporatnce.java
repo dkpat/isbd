@@ -13,4 +13,5 @@ public enum SortingImporatnce
 		kolor=k;
 		
 	}
+
 }

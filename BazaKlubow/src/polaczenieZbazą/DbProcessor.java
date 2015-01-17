@@ -220,6 +220,47 @@ public final class DbProcessor {
 		}
 		return result;
 	}
+	
+	
+	
+	
+	public static List<Muzyk> createReverseMusicianList(int nrZespo³u) {
+		LinkedList<Muzyk> result = new LinkedList<Muzyk>();
+
+		try {
+			st = con.createStatement();
+
+			rs = st.executeQuery("SELECT Muzycy.NrMuzyka,ImiêM,NazwiskoM,DataUrodzenia,DataŒmierci,ZdjêcieM FROM Muzycy INNER JOIN Cz³onkostwa ON Cz³onkostwa.NrMuzyka=Muzycy.NrMuzyka WHERE Cz³onkostwa.NrZespo³u<>"+nrZespo³u);
+
+			while (rs.next()) {
+				int ID_M = rs.getInt("NrMuzyka");
+				String imie = rs.getString("ImiêM");
+				String nazwisko = rs.getString("NazwiskoM");
+				Timestamp birthD = rs.getTimestamp("DataUrodzenia");
+				Timestamp deathD = rs.getTimestamp("DataŒmierci");
+				// Pocz¹tek operacji zwi¹zanych z wczytywaniem zdjêcia
+				BufferedImage zdjecie = null;
+				byte[] imageByte = rs.getBytes("ZdjêcieM");
+
+				imageByte = GetImageBytesFromOLEField(imageByte);
+				if (imageByte != null) {
+					InputStream in = new ByteArrayInputStream(imageByte);
+					zdjecie = ImageIO.read(in);
+				}
+				Muzyk nowyMuzyk=new Muzyk(ID_M, imie, nazwisko, zdjecie, birthD, deathD);
+				//System.out.println(nowyMuzyk);
+				result.add(nowyMuzyk);
+
+			}
+		}
+
+		catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+		return result;
+	}
 
 	// Koniec operacji zwi¹zanych z wczytywaniem zdjêcia
 
