@@ -107,6 +107,7 @@ public class MusicLayer extends BasicMuzyk<Instrument> {
 			Component[] child=p.getComponents();
 			System.out.println("Moje dziecko "+child+" dziecko!!!!!!!!!!!!!!!!!!!!!");
 			child[0].addMouseListener(sorter);
+			child[1].addMouseListener(strzalkowy);
 		}
 	}
 

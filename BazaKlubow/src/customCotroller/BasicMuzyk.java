@@ -54,6 +54,7 @@ public abstract class BasicMuzyk<C> extends Warstwa {
 		{
 			Component[] child=p.getComponents();
 			child[0].addMouseListener(sorter);
+			child[1].addMouseListener(strzalkowy);
 		}
 	}
 

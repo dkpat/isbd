@@ -39,7 +39,9 @@ public abstract class Warstwa<T> {
 	
 	
 	
-	Warstwa<T>.SortAction sorter=new Warstwa.SortAction(); //s³uchacz akcji dla labeli nag³ówków
+	protected Warstwa<T>.SortAction sorter=new Warstwa.SortAction(); //s³uchacz akcji dla labeli nag³ówków
+	protected Warstwa<T>.SortStrzalka strzalkowy=new Warstwa.SortStrzalka(); //s³uchacz akcji dla strza³ek
+	
 	///Dane dla sluchacza
 	private Stack<SortingImporatnce> stos;
 	private HashMap<JLabel, SortingImporatnce> poznajKolor;
