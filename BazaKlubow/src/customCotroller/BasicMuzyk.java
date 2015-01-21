@@ -36,7 +36,7 @@ public abstract class BasicMuzyk<C> extends Warstwa {
 
 	@Override
 	public void prepareHeader(JPanel header) {
-		
+		/*
 		JLabel nrM = new JLabel("Nr Muzyka");
 		JLabel nazwiskoM = new JLabel("Nazwisko");
 		JLabel imieM = new JLabel("Nazwikso");
@@ -45,7 +45,7 @@ public abstract class BasicMuzyk<C> extends Warstwa {
 		JLabel dataS=new JLabel("Data Œmierci");
 		System.out.println("robiê");
 		JLabel[] tab = { nrM, nazwiskoM, imieM,ZjecieM,dataU,dataS};
-		
+		*/
 		HashSet<JLabel> nieSortowalne=new HashSet<JLabel>();
 		nieSortowalne.add(ZjecieM);
 		
