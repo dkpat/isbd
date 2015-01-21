@@ -15,6 +15,7 @@ import java.util.TreeMap;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -66,6 +67,7 @@ public abstract class Warstwa<T> {
 		ID_overridingObject=ID;
 		footerGab.setBorder(BorderFactory.createLineBorder(Color.BLUE));
 		deletButton=new JButton(DELET_INFO);
+		
 	}
 
 	
@@ -198,6 +200,8 @@ public abstract class Warstwa<T> {
 	}
 	public void ustawWidzialnoœæPrzyiskuDoUsuwania(){
 		boolean visibility=!toDelete.isEmpty();
+		
+		
 		deletButton.setVisible(visibility);
 	}
 	public abstract int ileMamRekordów();
@@ -381,6 +385,20 @@ public abstract class Warstwa<T> {
 			
 		}
 		
+	}
+	
+	
+	public <Z,C>void dodajCheckBox(DataRecord<Z, C> row){
+		JCheckBox box=WidokPracMenu.ulukujCheckBox(graphicsRepresentation);
+		row.setCheckBox(box);
+	}
+	public <Z,C>void dodajFunctionButtons(DataRecord<Z, C> row){
+		JPanel functionButtons=WidokPracMenu.ulokujDeleteUpdateButton(graphicsRepresentation);
+		row.setFunctionButtons(functionButtons);;
+	}
+	public <Z,C>void dodaLuke(DataRecord<Z, C> row){
+		JPanel puste=WidokPracMenu.doajPust¹Przesztrzeñ(graphicsRepresentation);
+		row.setGap(puste);
 	}
 	
 }

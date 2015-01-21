@@ -17,7 +17,13 @@ import javax.swing.text.JTextComponent;
 import customStructure.ZmiennaWartosc;
 
 
-
+/**
+ * 
+ * @author sanczo
+ * @param <T> typ g³ównej tabeli dla, której ten rekord ma przechowywaæ dane
+ * @param <Z>typ tabeli pochodnej (np. je¿eli chcemy wyœwitliæ jedoczesnie wyœwietliæ informacje o zespo³ach i ich cz³onkach, to T=Zespoly, a Z=Muzycy)
+ * jeœli nie ma wartwy podrzêdnej to T=Z
+ */
 public class DataRecord<T,Z> {
 	Warstwa<T> parent;
 	
@@ -25,19 +31,24 @@ public class DataRecord<T,Z> {
 						  //,które maj¹ zdjêcie!!!!!!!
  	                      //Nie !!!!!!!!!!!	
 	
-	HashMap<Integer, ZmiennaWartosc<Object>> wartoœæIndex=new HashMap<Integer, ZmiennaWartosc<Object>>();//HashMapa, w której s¹ przechowywane informacje
-																										 //o tym czy zmieni³a o zmianach wartoœci (para stara wartoœæ, nowa wartoœæ)
-																										//oraz o numerze kolumny w tabeli z bazy
+	/**
+	 * HashMapa, w której s¹ przechowywane informacje
+	 * o tym  zmianach wartoœci (para stara wartoœæ, nowa wartoœæ)
+	 * oraz o numerze kolumny w tabeli z baz
+	 */
 	
-	;
+	
+	HashMap<Integer, ZmiennaWartosc<Object>> wartoœæIndex=new HashMap<Integer, ZmiennaWartosc<Object>>();
+	
 	JCheckBox box;
+	
 	JPanel functionBars;
 	private HashMap<Integer,JTextComponent> tab;
 	private Warstwa<Z> child;
 	JPanel gab;
 	
-	public DataRecord(){
-		
+	public DataRecord(Warstwa<T> kepper){
+		parent=kepper;
 	}
 	
 	public DataRecord(Warstwa<T> p,int ID_Recordu,JCheckBox b,HashMap<Integer,JTextComponent> components,JPanel funcionBars,Warstwa<Z> child,JPanel gab) {
@@ -83,6 +94,9 @@ public class DataRecord<T,Z> {
 	public HashMap<Integer,JTextComponent> getComponents() {
 		return tab;
 	}
+	public void setComponents(HashMap<Integer, JTextComponent> components){
+		this.tab=components;
+	}
 	public JCheckBox getCheckBox() {
 		return box;
 	}
@@ -101,6 +115,20 @@ public class DataRecord<T,Z> {
 	{
 		return child;
 	}
+	public void setGap(JPanel gap){
+	
+		this.gab=gap;
+	}
+	public void setCheckBox(JCheckBox box){
+		box.addItemListener(new BoxListener());
+		this.box=box;
+	}
+	
+	public void setFunctionButtons(JPanel functionButtons)
+	{
+		this.functionBars=functionButtons;
+	}
+	
 	
 	public void dodajDoNowyWpisDoMapyWartosci(int Index,ZmiennaWartosc<Object> value) {
 		wartoœæIndex.put(Index, value);
@@ -126,8 +154,10 @@ public class DataRecord<T,Z> {
 			DataRecord<T, Z> record=DataRecord.this;
 			if(stanZanaczenia==ItemEvent.SELECTED)
 			{
+				System.out.println(parent);
 				parent.dodajDoListyUsuwanych(record);
 				parent.ustawWidzialnoœæPrzyiskuDoUsuwania();
+				
 			}
 			else
 			{

@@ -53,10 +53,7 @@ public class BandLayer extends Warstwa<Zespol> {
 		prepareHeader(graphicsRepresentation);
 		WidokPracMenu.doajPust¹Przesztrzeñ(graphicsRepresentation);
 		List<Zespol> myData=dowlandDataFromDataBase("");
-		for(Zespol z: myData)
-		{
-			prepareDataRow(z);
-		}
+		utwórzWpisyDlaDanych(myData);
 		ustwaWszystkieChecboxy();
 		prepareFooter();
 		/*
@@ -71,6 +68,20 @@ public class BandLayer extends Warstwa<Zespol> {
 		prepareFooter();
 		*/
 		
+	}
+	
+	public void utwórzWpisyDlaDanych(Collection<Zespol> data){
+		for(Zespol z: data)
+		{
+			DataRecord<Zespol, Muzyk> row=new DataRecord<Zespol, Muzyk>(this);
+			dodajCheckBox(row);
+			prepareDataRow(z,row);
+			dodajFunctionButtons(row);
+			dodaLuke(row);
+			JPanel panelForChild=new JPanel();
+			createChild(panelForChild,z.getID());
+			
+		}
 	}
 
 	@Override
@@ -97,7 +108,7 @@ public class BandLayer extends Warstwa<Zespol> {
 		WidokPracMenu.createHeader(header,nieSortowalne,this ,tab, 0, 0);
 		
 	}
-	public void prepareDataRow(Zespol z)
+	public void prepareDataRow(Zespol z,DataRecord<Zespol, Muzyk> row)
 	{
 		
 		int IdZ=z.getID();
@@ -116,38 +127,47 @@ public class BandLayer extends Warstwa<Zespol> {
 		Object[] data={IdZ,nazwa,date};
 		int[] indexs={0,1,2};
 		
-		JPanel czlonkowie=new JPanel();
-		czlonkowie.setLayout(new GridBagLayout());
+	
 		
-		czlonkowie.add(new JLabel("cz³onkowie:"), new GBC(0,0,GBC.REMAINDER,1).setAnchor(GBC.WEST));
-		czlonkowie.add(new JLabel(), new GBC(0,1));
-		System.out.println("Id zespolu to: "+IdZ);
-		Warstwa<Muzyk> child=new MusicLayer(czlonkowie,IdZ);
-		child.initializeGraphicsRepresentation();
 		
-		DataRecord< Zespol, Muzyk> row=new DataRecord<Zespol, Muzyk>();
-		DoublePair result=WidokPracMenu.createDataRow(graphicsRepresentation,this,row,species, indexs,data,czlonkowie,tabela);
-		JCheckBox box =result.getBox();
+		HashMap<Integer, JTextComponent> components= WidokPracMenu.createDataRow(graphicsRepresentation,this,row,species, indexs,data);
+		/*JCheckBox box =result.getBox();
 		HashMap<Integer,JTextComponent> components=result.getMapOFComponents();
 		JPanel funcionButtoons=result.getFuncionButtons();
-		JPanel gab=result.getGap();
+		JPanel gab=result.getGap();*/
 			
 			
 		
 			
-		row.setAll(this,IdZ,box, components, funcionButtoons,child,gab);;
+		row.setComponents(components);;
 		dataRows.add(row);
 		
-		row.dodajDoNowyWpisDoMapyWartosci(0, new ZmiennaWartosc<Object>(IdZ));
+	/*	row.dodajDoNowyWpisDoMapyWartosci(0, new ZmiennaWartosc<Object>(IdZ));
 		row.dodajDoNowyWpisDoMapyWartosci(1, new ZmiennaWartosc<Object>(nazwa));
-		row.dodajDoNowyWpisDoMapyWartosci(2, new ZmiennaWartosc<Object>(date));
+		row.dodajDoNowyWpisDoMapyWartosci(2, new ZmiennaWartosc<Object>(date));*/
 	}
 
+	
+	public Warstwa<Muzyk> createChild(JPanel panel,int IdZ)
+	{
+		panel.setLayout(new GridBagLayout());
+		
+		panel.add(new JLabel("cz³onkowie:"), new GBC(0,0,GBC.REMAINDER,1).setAnchor(GBC.WEST));
+		panel.add(new JLabel(), new GBC(0,1));
+		
+		Warstwa<Muzyk> child=new MusicLayer(panel,IdZ);
+		child.initializeGraphicsRepresentation();
+		System.out.println("Brum vbrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrruuuuuuuuuuuuuuuuuuummmmmmmmmm");
+		WidokPracMenu.ulokujDziecko(graphicsRepresentation, panel); 
+		
+		return child;
+	}
+	
 	@Override
 	public void prepareFooter() {
 		
 		comboBox=new JComboBox<String>(new SortedComboBoxModel<String>(new String[]{LAST_ADD_VALUE},new MojComparator(LAST_ADD_VALUE)));
-		
+		deletButton.setVisible(true);
 		WidokPracMenu.createFooter(graphicsRepresentation, comboBox, deletButton,footerGab, 3);
 	}
 

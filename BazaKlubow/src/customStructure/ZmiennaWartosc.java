@@ -10,10 +10,13 @@ public class ZmiennaWartosc<T> {
 	}
 	public void setNewValue(T newValue)
 	{
+		
 		if(oldValue.equals(newValue))
 			this.newValue=null;
 		else
 			this.newValue=newValue;
+		System.out.println("Nowa wartoœæ "+newValue +"     jjjeeeeeeeeeeeee" );
+		System.out.println("Stara wartoœæ "+oldValue +"     jjjeeeeeeeeeeeee" );
 	}
 	public void setOldValue(T oldValue) {
 		

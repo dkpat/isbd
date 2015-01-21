@@ -9,6 +9,8 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
@@ -195,22 +197,16 @@ public class WidokPracMenu extends JPanel {
 		return stos;
 	}
 
-	public static <T,Z>DoublePair createDataRow(JPanel panel,final Warstwa<T> warstwaDecyzyjna,final DataRecord<T, Z> row,RodzajKomponentu[] species,final int[] indexs,Object[] data,JPanel child,RodzajTabeli tab) { //dodaj warstwê jako ayrgument
+	public static <T,Z>HashMap<Integer ,JTextComponent> createDataRow(JPanel panel,final Warstwa<T> warstwaDecyzyjna,final DataRecord<T, Z> row,RodzajKomponentu[] species,final int[] indexs,Object[] data) { //dodaj warstwê jako ayrgument
 		//Tablica komponentów do póŸniejszego zwrócenia
-		Component[] components=new Component[data.length+1];
+		//Component[] components=new Component[data.length+1];///    w³aœciwie dlaczego jest +1?    //bez pustego JPanela, dlatego nie bêdzie dowania jedynki.
 		
 		
 		
 		//Tworze przyciski do anulowania i cofania
-		JButton update = new JButton("aktualizuj");
-		JButton cancel = new JButton("cofnij");
-		final JPanel funcionButtons=new JPanel();
-		funcionButtons.setVisible(false);
-		funcionButtons.add(update);
-		funcionButtons.add(cancel);
+		
 		//tworzê check ox
-		JCheckBox box=new JCheckBox();
-		panel.add(box, new GBC(GBC.RELATIVE, GBC.RELATIVE).setAnchor(GBC.EAST));
+		
 		
 		final HashMap<Integer, Integer> mapaHashCodeIndex=new HashMap<Integer, Integer>(); //tworzy mapê gdzie klucze to hash kody graficznych komponentów a wartoœæ to nr kolumn	
 		
@@ -226,32 +222,51 @@ public class WidokPracMenu extends JPanel {
 				mapaIndexComponent.put(indexs[i], editableT);
 				row.dodajDoNowyWpisDoMapyWartosci(indexs[i], new ZmiennaWartosc<Object>(text));
 				mapaHashCodeIndex.put(editableT.hashCode(), indexs[i]);
-				Document docEditable_Text=editableT.getDocument();
+				
+				editableT.addFocusListener(new FocusListener() {
+					
+					@Override
+					public void focusLost(FocusEvent e) {
+						JTextField source= (JTextField)e.getSource();
+						row.uaktualnijWpisWMapieWartosci(mapaHashCodeIndex.get(e.getSource().hashCode()), source.getText());
+						System.out.println("pracuje");
+						System.out.println(row);
+						row.setVisibelForFunctionBar();
+					}
+					
+					@Override
+					public void focusGained(FocusEvent e) {
+						// TODO Auto-generated method stub
+						
+					}
+				});
+				
+		/*		Document docEditable_Text=editableT.getDocument();
 				
 					docEditable_Text.addDocumentListener(new DocumentListener() {
 					
 					@Override
 					public void removeUpdate(DocumentEvent e) {
-						funcionButtons.setVisible(true);
+						row.uaktualnijWpisWMapieWartosci(mapaHashCodeIndex.get(e.), current);
 						
 					}
 					
 					@Override
 					public void insertUpdate(DocumentEvent e) {
-						funcionButtons.setVisible(true);
+						
 						
 					}
 					
 					@Override
 					public void changedUpdate(DocumentEvent e) {
-						funcionButtons.setVisible(true);
+						
 						
 					}
-				});
+				});*/
 			
 				panel.add(editableT, new GBC(GBC.RELATIVE, GBC.RELATIVE).setIpad(HorizontalGapIntTab, 0)
 						.setFill(GBC.HORIZONTAL));
-				components[i]=editableT;
+				
 				break;
 				
 			case IMAGE:
@@ -292,6 +307,7 @@ public class WidokPracMenu extends JPanel {
 						if(!old.equals(current))
 						{	
 							row.uaktualnijWpisWMapieWartosci(mapaHashCodeIndex.get(evt.getSource().hashCode()), current);
+							row.setVisibelForFunctionBar();
 							System.out.println("pracuje");
 							System.out.println(row);
 							
@@ -303,7 +319,7 @@ public class WidokPracMenu extends JPanel {
 				
 				panel.add(dateText, new GBC(GBC.RELATIVE, GBC.RELATIVE).setIpad(HorizontalGapIntTab, 0)
 						.setFill(GBC.HORIZONTAL));
-				components[i]=dateText;
+			
 				
 				break;
 			case DATE_DD_MM_YYYY:
@@ -340,7 +356,7 @@ public class WidokPracMenu extends JPanel {
 				
 				panel.add(dateTextClassic, new GBC(GBC.RELATIVE, GBC.RELATIVE).setIpad(HorizontalGapIntTab, 0)
 						.setFill(GBC.HORIZONTAL));
-				components[i]=dateTextClassic;
+				
 				
 				break;
 			case UNEDITABLE_INT:
@@ -377,61 +393,51 @@ public class WidokPracMenu extends JPanel {
 				break;
 			}
 		}
-		panel.add(funcionButtons, new GBC(GBC.RELATIVE, GBC.RELATIVE).setAnchor(GBC.WEST));
-		JPanel luka=new JPanel();
-		luka.setBorder(BorderFactory.createLineBorder(Color.blue));
-		panel.add(luka, new GBC(GBC.RELATIVE, GBC.RELATIVE,GBC.REMAINDER,1).setFill(GBC.BOTH));
-		components[components.length-1]=luka;
+		
+		
+	/*	
 		if(child!=null){
 			System.out.println("Dodaje dziecko");
-			panel.add(child, new GBC(GBC.RELATIVE,GBC.RELATIVE,GBC.REMAINDER,1).setInsets(5, 50, 5, 0));
-		}
-		System.out.println("box to "+box+"!!!!!!!!!!!!!!!!!!!");
-		return new DoublePair(box, mapaIndexComponent, funcionButtons,luka);
-		/*
-		switch (tab) {
-		case ZESPO£Y:
-			JPanel listOFMembers=createListOfMembers(tab.ID);
-			panel.add(listOFMembers, new GBC(0, GBC.RELATIVE,GBC.REMAINDER,1).setInsets(5,30, 15, 0));
-			break;
-
-		default:
-			break;
-		}
-		*/
+			
+		}*/
+	
+		
+		return mapaIndexComponent;
 		
 		
-		
-		
-		/*
-		
-		JTextField id = new JTextField(new Integer(zespol.getID()).toString());
-		JTextField nazwa = new JTextField(zespol.getNazwaZespolu());
-		JTextField data = new JTextField(String.format("%tF",
-				zespol.getDataZalozenia()));
-		
-		
-		id.setHorizontalAlignment(SwingConstants.CENTER);
-		nazwa.setHorizontalAlignment(SwingConstants.CENTER);
-		data.setHorizontalAlignment(SwingConstants.CENTER);
-
-		panel.add(id, new GBC(0, GBC.RELATIVE).setIpad(HorizontalGapIntTab, 0)
-				.setFill(GBC.HORIZONTAL));
-		panel.add(nazwa,
-				new GBC(1, GBC.RELATIVE).setIpad(HorizontalGapIntTab, 0)
-						.setFill(GBC.HORIZONTAL));
-		panel.add(data, new GBC(2, GBC.RELATIVE)
-				.setIpad(HorizontalGapIntTab, 0).setFill(GBC.HORIZONTAL));
-		*/
-		
-		
-		
-		//A tutaj tworzê nag³ówek gotowy przyj¹æ listê cz³onków,
 		
 		
 	
 	}
 
+	
+	public static void ulokujDziecko(JPanel panel,JPanel child){
+		panel.add(child, new GBC(GBC.RELATIVE,GBC.RELATIVE,GBC.REMAINDER,1).setInsets(5, 50, 5, 0));
+	}
+	
+	public static  JCheckBox ulukujCheckBox(JPanel panel){
+		JCheckBox box=new JCheckBox();
+		panel.add(box, new GBC(GBC.RELATIVE, GBC.RELATIVE).setAnchor(GBC.EAST));
+		return box;
+	}
+	
+
+	
+	public static JPanel ulokujDeleteUpdateButton(JPanel panel){
+		JButton update = new JButton("aktualizuj");
+		JButton cancel = new JButton("cofnij");
+		
+		JPanel functionButtons=new JPanel();
+		
+		functionButtons.setVisible(false);
+		functionButtons.add(update);
+		functionButtons.add(cancel);
+		
+		panel.add(functionButtons, new GBC(GBC.RELATIVE, GBC.RELATIVE).setAnchor(GBC.WEST));
+		
+		return functionButtons;
+	}
+	
 	public static <T>List<JPanel> createHeader(JPanel header,HashSet<JLabel> nieSortowalne,final Warstwa<T> warstwaDecyzyjna,final JLabel[] tab,int xStart,int yStart) {
 		
 			
@@ -623,14 +629,15 @@ public class WidokPracMenu extends JPanel {
 	}
 
 	
-	public static void doajPust¹Przesztrzeñ(JPanel header) {
+	public static JPanel doajPust¹Przesztrzeñ(JPanel header) {
 		JPanel pom=new JPanel();
 		pom.setBorder(BorderFactory.createLineBorder(Color.ORANGE));
 		header.add(pom, new GBC(GBC.RELATIVE, GBC.RELATIVE, GBC.REMAINDER, 1).setFill(GBC.HORIZONTAL));
+		return pom;
 	}
 
 	public static void createFooter(JPanel panel,JComponent comboBox,JButton deletButton,JPanel gap ,int HeaderCount) {
-		//deletButton.setVisible(false);
+		deletButton.setVisible(true);
 		panel.add(comboBox, new GBC(1,GBC.RELATIVE,HeaderCount,1).setFill(GBC.BOTH));
 		
 		//pom.setBorder(BorderFactory.createLineBorder(Color.red));

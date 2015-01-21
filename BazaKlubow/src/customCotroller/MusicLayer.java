@@ -60,10 +60,9 @@ public class MusicLayer extends BasicMuzyk<Instrument> {
 			prepareHeader(graphicsRepresentation);
 			WidokPracMenu.doajPust¹Przesztrzeñ(graphicsRepresentation);
 			List<Muzyk> myData=dowlandDataFromDataBase("");
-			for(Muzyk m: myData)
-			{
-				prepareDataRow(m);
-			}
+			
+			utwórzWpisyDlaDanych(myData);
+			
 			prepareFooter();
 			ustawWidzialnoœæPrzyiskuDoUsuwania();
 			
@@ -76,7 +75,19 @@ public class MusicLayer extends BasicMuzyk<Instrument> {
 		///Wersja bardzo robocza, do poprawy!!!!!!!!!!!!!!
 		return DbProcessor.createMusicianList(ID_overridingObject);
 	}
-
+	
+	public void utwórzWpisyDlaDanych(Collection<Muzyk> data)
+	{
+		for(Muzyk m: data)
+		{
+			DataRecord<Muzyk, Instrument> row=new DataRecord<Muzyk, Instrument>(this);
+			dodajCheckBox(row);
+			prepareDataRow(m,row);
+			dodajFunctionButtons(row);
+			dodaLuke(row);
+		}
+	}
+	
 	@Override
 	public void deleteDataRecordFromList() {
 		dataRows.clear();
@@ -111,7 +122,7 @@ public class MusicLayer extends BasicMuzyk<Instrument> {
 		}
 	}
 
-	public void prepareDataRow(Muzyk m)
+	public void prepareDataRow(Muzyk m, DataRecord<Muzyk, Instrument> row)
 	{
 		
 		int IdM=m.getNrMuzyka();
@@ -220,17 +231,18 @@ public class MusicLayer extends BasicMuzyk<Instrument> {
 		
 	
 		
-		DataRecord< Muzyk, Instrument> row=new DataRecord<Muzyk, Instrument>();
 		
 		
-		DoublePair result=WidokPracMenu.createDataRow(graphicsRepresentation,this,row,species,indexs,data,null,tabela);
-		JCheckBox box =result.getBox();
 		
-		HashMap<Integer, JTextComponent> components=result.getMapOFComponents();
-		JPanel funcionButtoons=result.getFuncionButtons();
-		JPanel gab=result.getGap();
-		System.out.println(components+"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-		row.setAllWithoutChild(this,IdM,box, components, funcionButtoons,gab);
+		HashMap<Integer,JTextComponent > components=WidokPracMenu.createDataRow(graphicsRepresentation,this,row,species,indexs,data);
+		
+		//JCheckBox box =result.getBox();
+		
+		//HashMap<Integer, JTextComponent> components=result.getMapOFComponents();
+//		JPanel funcionButtoons=result.getFuncionButtons();
+//		JPanel gab=result.getGap();
+//		System.out.println(components+"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+		row.setComponents(components);;
 		dataRows.add(row);
 	}
 	
@@ -256,7 +268,7 @@ public class MusicLayer extends BasicMuzyk<Instrument> {
 		
 		
 		comboBox=new JComboBox<String>(new SortedComboBoxModel<String>(tab,new MojComparator(LAST_ADD_VALUE)));
-		
+		deletButton.setVisible(true);
 		WidokPracMenu.createFooter(graphicsRepresentation, comboBox, deletButton,footerGab, 3);
 
 	}
@@ -277,6 +289,7 @@ public class MusicLayer extends BasicMuzyk<Instrument> {
 			child.clearGraphicsRepresentation();
 		graphicsRepresentation.remove(data.getCheckBox());
 		graphicsRepresentation.remove(data.getFunctionBars());
+		System.out.println(data.getGap());
 		graphicsRepresentation.remove(data.getGap());
 		for(Component c:tab)
 		{
@@ -322,7 +335,7 @@ public class MusicLayer extends BasicMuzyk<Instrument> {
 	@Override
 	public String dajNazweNaglowkaKolumny(String tekst) {
 		if(tekst.equals("Nr Muzyka"))
-			return "NrMuzyka";
+			return "Muzycy.NrMuzyka";
 		else
 			if(tekst.equals("Imiê"))
 				return "ImiêM";
@@ -358,12 +371,7 @@ public class MusicLayer extends BasicMuzyk<Instrument> {
 		List<Muzyk> danePosortowane=DbProcessor.createSoretedMusicianList(ID_overridingObject,warunekSortowania );
 		removeFooter();
 		remoAllDataRows();
-		for(Muzyk m: danePosortowane)
-		{
-			System.out.printf("%tF%n",m.getDataUrodzenia());
-			prepareDataRow(m);
-			
-		}
+		utwórzWpisyDlaDanych(danePosortowane);
 		prepareFooter();
 		graphicsRepresentation.validate();
 		graphicsRepresentation.repaint();
