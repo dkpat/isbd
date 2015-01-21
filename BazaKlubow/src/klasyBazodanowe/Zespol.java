@@ -34,7 +34,7 @@ public class Zespol
 	public String toString()
 	{
 		StringBuilder bob=new StringBuilder(String.format("ID = %1$d, %2$s - za³o¿ony w %3$tF muzycy: %n", ID,nazwa,poczatekD));
-	
+		//ddd
 			bob.append("\n");
 		return bob.toString();
 	}
