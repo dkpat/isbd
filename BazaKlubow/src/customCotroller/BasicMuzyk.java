@@ -39,7 +39,7 @@ public abstract class BasicMuzyk<C> extends Warstwa {
 		
 		JLabel nrM = new JLabel("Nr Muzyka");
 		JLabel nazwiskoM = new JLabel("Nazwisko");
-		JLabel imieM = new JLabel("Imiê");
+		JLabel imieM = new JLabel("Nazwisko");
 		JLabel ZjecieM = new JLabel("Zdjêcie");
 		JLabel dataU=new JLabel("Data Urodzenia");
 		JLabel dataS=new JLabel("Data Œmierci");
