@@ -38,9 +38,9 @@ public abstract class BasicMuzyk<C> extends Warstwa {
 	public void prepareHeader(JPanel header) {
 		
 
-		JLabel[] tab = { nrM, nazwiskoM, imieM,ZjecieM,dataU,dataS};
+		//JLabel[] tab = { nrM, nazwiskoM, imieM,ZjecieM,dataU,dataS};
 		
-		HashSet<JLabel> nieSortowalne=new HashSet<JLabel>();
+		//HashSet<JLabel> nieSortowalne=new HashSet<JLabel>();
 		nieSortowalne.add(ZjecieM);
 		
 		List<JPanel> naglowki= WidokPracMenu.createHeader(header,nieSortowalne, this,tab, 0, 0);
