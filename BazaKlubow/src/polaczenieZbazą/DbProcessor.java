@@ -156,7 +156,7 @@ public final class DbProcessor {
 
 		try {
 			st = con.createStatement();
-			rs = st.executeQuery("SELECT * FROM ZESPO³Y");
+			rs = st.executeQuery("SELECT * FROM ZESPO³Y ORDER BY NrZespo³u, NazwaZ");
 			while (rs.next()) {
 				int ID = rs.getInt("NrZespo³u");
 				String nazwaZ = rs.getString("NazwaZ");
@@ -175,7 +175,7 @@ public final class DbProcessor {
 		return wynik;
 	}
 	/**
-	 * Metoda tworzy listê muzyków, którzy s¹ czlonkami przez konretnego zespo³u
+	 * Metoda tworzy listê muzyków, którzy s¹ cz³onkami przez konretnego zespo³u
 	 * @param nrZespo³u dla, ktorego mam byæ utworzona lista cz³onków
 	 * @return Je¿eli s¹ w bazie tacy cz³onkowie w bazie, zostaje zwrócona lista z muzykami,
 	 * je¿eli zespó³ nie ma cz³onków(czyli te¿ sytuacja kiedy zespó³ w ogóle nie istnieje)
@@ -192,7 +192,7 @@ public final class DbProcessor {
 			rs = st.executeQuery("SELECT Muzycy.NrMuzyka,ImiêM,NazwiskoM,DataUrodzenia,DataŒmierci,ZdjêcieM FROM Muzycy INNER JOIN Cz³onkostwa ON Cz³onkostwa.NrMuzyka=Muzycy.NrMuzyka WHERE Cz³onkostwa.NrZespo³u="+nrZespo³u);
 
 			while (rs.next()) {
-				int ID_M = rs.getInt("NrMuzyka");
+				int ID_M = rs.getInt(1);
 				String imie = rs.getString("ImiêM");
 				String nazwisko = rs.getString("NazwiskoM");
 				Timestamp birthD = rs.getTimestamp("DataUrodzenia");
@@ -376,9 +376,50 @@ public final class DbProcessor {
 			e.printStackTrace();
 		}
 	}
+	
+	public static List<Muzyk> createSoretedMusicianList(int nrZespo³u,String wyrazenieSort)
+	{
+		LinkedList<Muzyk> result = new LinkedList<Muzyk>();
 
-	private static byte[] GetImageBytesFromOLEField(byte[] oleFieldBytes)
-			throws Exception {
+		try {
+			st = con.createStatement();
+			System.out.println("wjaldlhalhlfhlsfjil"+wyrazenieSort);
+			rs = st.executeQuery("SELECT Muzycy.NrMuzyka,ImiêM,NazwiskoM,DataUrodzenia,DataŒmierci,ZdjêcieM FROM Muzycy INNER JOIN Cz³onkostwa ON Cz³onkostwa.NrMuzyka=Muzycy.NrMuzyka "+" WHERE Cz³onkostwa.NrZespo³u="+nrZespo³u+" ORDER By "+wyrazenieSort);
+
+			while (rs.next()) {
+				int ID_M = rs.getInt(1);
+				String imie = rs.getString("ImiêM");
+				String nazwisko = rs.getString("NazwiskoM");
+				Timestamp birthD = rs.getTimestamp("DataUrodzenia");
+				Timestamp deathD = rs.getTimestamp("DataŒmierci");
+				// Pocz¹tek operacji zwi¹zanych z wczytywaniem zdjêcia
+				BufferedImage zdjecie = null;
+				byte[] imageByte = rs.getBytes("ZdjêcieM");
+
+				imageByte = GetImageBytesFromOLEField(imageByte);
+				if (imageByte != null) {
+					InputStream in = new ByteArrayInputStream(imageByte);
+					zdjecie = ImageIO.read(in);
+				}
+				Muzyk nowyMuzyk=new Muzyk(ID_M, imie, nazwisko, zdjecie, birthD, deathD);
+				//System.out.println(nowyMuzyk);
+				result.add(nowyMuzyk);
+				System.out.printf("%tF%n",birthD);
+			}
+		}
+
+		catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+		return result;
+	}
+	
+
+
+
+	private static byte[] GetImageBytesFromOLEField(byte[] oleFieldBytes) throws Exception {
 		final String BITMAP_ID_BLOCK = "BM";
 		final String JPG_ID_BLOCK = "\u00FF\u00D8\u00FF";
 		// final String JPG_ID_BLOCK = "JFIF";
